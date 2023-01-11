@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AAPolygon.cpp" />
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="Luxoft_test.cpp" />
     <ClCompile Include="Contour.cpp" />
@@ -144,7 +145,7 @@
     <ClCompile Include="Tests.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="algorithms.h" />
+    <ClInclude Include="AAPolygon.h" />
     <ClInclude Include="Container.h" />
     <ClInclude Include="IO.h" />
     <ClInclude Include="math.h" />
