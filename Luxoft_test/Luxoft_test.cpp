@@ -14,19 +14,32 @@ int main(int argc, char* argv[])
 
 	initData = Tests::generateRandomInput({ 400, 400 }, 100);
 
-	Container c(initData.containerSize);
-	for (auto boxIt = initData.rectsSizes.rbegin(); boxIt != initData.rectsSizes.rend(); boxIt++){
-		if (c.tryToAddRect(*boxIt)) {
-
+	bool finish = false;
+	std::vector<Container> containers;
+	while (!finish)
+	{
+		finish = true;
+		containers.emplace_back(initData.containerSize);
+		for (auto boxIt = initData.rectsSizes.begin(); boxIt != initData.rectsSizes.end();) {
+			if (containers.back().tryToAddRect(*boxIt)) {
+				finish = false;
+				boxIt = initData.rectsSizes.erase(boxIt);
+			}
+			else {
+				++boxIt;
+			}
 		}
 	}
+	containers.pop_back();
 
-	result.containerSize = c.size();
-	result.rects.resize(1);
-	auto boxes = c.boxes();
-	for (auto& resBox : boxes) {
-		result.rects.front().push_back(resBox);
-	}
+	result.containerSize = initData.containerSize;
+	for (size_t containerIndex = 0; containerIndex < containers.size(); containerIndex++){
+		result.rects.resize(result.rects.size() + 1);
+		auto boxes = containers[containerIndex].boxes();
+		for (auto& resBox : boxes) {
+			result.rects.back().push_back(resBox);
+		}
+	}	
 
 	std::cout << result;
 }

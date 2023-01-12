@@ -14,7 +14,8 @@ Input Tests::generateRandomInput(const Size& conteinerSize, int boxCount)
 		auto randW = rand() % int(result.containerSize.maxSide() * 0.5);
 		auto randH = rand() % int(result.containerSize.maxSide() * 0.5);
 
-		auto newIt = result.rectsSizes.insert(Size(randW == 0 ? 1 : randW, randH == 0 ? 1 : randH));
+		result.rectsSizes.push_back(Size(randW == 0 ? 1 : randW, randH == 0 ? 1 : randH));
+		result.sort();
 	}
 
 	return result;

@@ -1,13 +1,21 @@
 #pragma once
 
 #include "Recti.h"
+#include <algorithm>
+#include <execution>
 #include <iostream>
-#include <set>
+#include <list>
 
 struct Input
 {
 	Size containerSize;
-	std::multiset<Size> rectsSizes;
+	std::list<Size> rectsSizes;
+
+	void sort() {
+		rectsSizes.sort([](const Size& a, const Size& b) {
+			return b < a;
+			});
+	}
 
 	friend std::istream& operator>>(std::istream& input, Input& in);
 };
@@ -47,10 +55,11 @@ inline std::istream& operator>>(std::istream& is, Input& in) {
 		}
 		else {
 			if (in.containerSize.minSide() >= currentSize.minSide()) {
-				in.rectsSizes.insert(currentSize);
+				in.rectsSizes.push_back(currentSize);
 			}
 		}
 	}
 
+	in.sort();
 	return is;
 }
