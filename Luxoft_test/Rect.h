@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "structs.h"
-#include "point.h"
+#include "size.h"
+#include "vec2.h"
 
 class Rect {
 	vec2 _downLeft;

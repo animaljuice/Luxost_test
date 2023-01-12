@@ -1,14 +1,32 @@
 #pragma once
 
 #include <vector>
-#include "point.h"
+#include <set>
+#include "vec2.h"
+#include "Edge.h"
+#include "Recti.h"
 
 class AAPolygon
 {
-	vec2 _m_start;
-	std::vector<double> _m_edges;
+	std::vector<vec2i> _m_nodes;
+	std::vector<Edge> _m_cache;
+	bool insideTest(const Recti& testedRect);
+
+	AAPolygon(){}
 
 public:
-	AAPolygon(const vec2& startPoint, const std::vector<double>& edges);
+	struct CutResult {
+		bool m_succesfull = true;
+		std::vector<AAPolygon> m_newContours;
+	};
+
+	AAPolygon(const std::vector<vec2i>& nodes);
+	std::vector<Edge> edges();
+	std::multiset<Edge> edges(Orientation o);
+	std::vector<vec2i> nodes() const {
+		return _m_nodes;
+	}
+
+	CutResult tryToCut(const Recti& testedRect);
 };
 

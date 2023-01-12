@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Rect.h"
+#include "Recti.h"
 #include <iostream>
 #include <set>
 
@@ -14,7 +14,7 @@ struct Input
 
 struct Output {
 	Size containerSize;
-	std::vector<std::vector<Rect>> rects;
+	std::vector<std::vector<Recti>> rects;
 
 	friend std::ostream& operator<<(std::ostream& os, const Output& dt);
 };

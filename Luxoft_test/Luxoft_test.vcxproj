@@ -140,19 +140,19 @@
     <ClCompile Include="AAPolygon.cpp" />
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="Luxoft_test.cpp" />
-    <ClCompile Include="Contour.cpp" />
     <ClCompile Include="Rect.cpp" />
+    <ClCompile Include="Recti.cpp" />
     <ClCompile Include="Tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AAPolygon.h" />
     <ClInclude Include="Container.h" />
+    <ClInclude Include="Edge.h" />
     <ClInclude Include="IO.h" />
-    <ClInclude Include="math.h" />
-    <ClInclude Include="point.h" />
-    <ClInclude Include="Contour.h" />
+    <ClInclude Include="vec2.h" />
     <ClInclude Include="Rect.h" />
-    <ClInclude Include="structs.h" />
+    <ClInclude Include="Recti.h" />
+    <ClInclude Include="size.h" />
     <ClInclude Include="Tests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

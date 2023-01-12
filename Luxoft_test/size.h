@@ -3,10 +3,10 @@
 #include <iostream>
 
 class Size {
-	double _w, _h;
+	int _w, _h;
 
 public:
-	Size(double w = 0, double h = 0) :
+	Size(int w = 0, int h = 0) :
 		_w(w), _h(h)
 	{
 

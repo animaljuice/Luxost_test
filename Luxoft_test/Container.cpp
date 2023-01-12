@@ -5,45 +5,53 @@
 Container::Container(const Size& containerSize) :
 	_m_size(containerSize)
 {
-	auto wdiv2 = _m_size.width() / 2.;
-	auto hdiv2 = _m_size.height() / 2.;
-	std::vector<vec2> initPoints = { {-wdiv2,-hdiv2}, {wdiv2,-hdiv2}, {wdiv2,hdiv2}, {-wdiv2,hdiv2} };
+	auto wdiv2 = _m_size.width() >> 1;
+	auto hdiv2 = _m_size.height() >> 1;
+	std::vector<vec2i> initPoints = { {0 - wdiv2,0 - hdiv2},
+		{containerSize.width() - wdiv2,0 - hdiv2},
+		{containerSize.width() - wdiv2, containerSize.height() - hdiv2},
+		{0 - wdiv2,containerSize.height() - hdiv2} };
 	_m_emptyAreas.emplace_back(initPoints);
 }
 
 bool Container::tryToAddRect(const Size& rectSize)
 {
-	auto wdiv2 = _m_size.width() / 2.;
-	auto hdiv2 = _m_size.height() / 2.;
+	auto wdiv2 = _m_size.width() >> 1;
+	auto hdiv2 = _m_size.height() >> 1;
 
 	for (size_t areaIndex = 0; areaIndex < _m_emptyAreas.size(); areaIndex++)
 	{
-		auto corners = _m_emptyAreas[areaIndex].vertices();
+		auto edges = _m_emptyAreas[areaIndex].edges();
 		std::vector<size_t> pushOutIndexes;
-		for (size_t cornerIndex = 0; cornerIndex < corners.size(); cornerIndex++)
+		vec2i curNormal = edges.front().normal();
+		vec2i nextNormal;
+		for (size_t cornerIndex = 0; cornerIndex < edges.size(); cornerIndex++)
 		{
-			auto prevIndex = cornerIndex == 0 ? corners.size() - 1 : cornerIndex - 1;
-			auto nextIndex = (cornerIndex + 1) % corners.size();
-			if ((corners[nextIndex].X() - corners[prevIndex].X()) *
-				(corners[cornerIndex].Y() - corners[prevIndex].Y()) -
-				(corners[nextIndex].Y() - corners[prevIndex].Y()) *
-				(corners[cornerIndex].X() - corners[prevIndex].X()) < 0) {
-				pushOutIndexes.push_back(cornerIndex);
+			auto nextIndex = (cornerIndex + 1) % edges.size();
+			nextNormal = edges[nextIndex].normal();
+
+			if (curNormal.X() < 0 && nextNormal.Y() < 0 ||
+				curNormal.Y() < 0 && nextNormal.X() > 0 ||
+				curNormal.X() > 0 && nextNormal.Y() > 0 ||
+				curNormal.Y() > 0 && nextNormal.X() < 0) {
+				pushOutIndexes.push_back(nextIndex);
 			}
+
+			curNormal = nextNormal;
 		}
 
+		auto corners = _m_emptyAreas[areaIndex].nodes();
 		std::sort(std::execution::seq, pushOutIndexes.begin(), pushOutIndexes.end(), [&corners](size_t a, size_t b) {
-			return corners[a].len() > corners[b].len();
+			return vec2(corners[a].X(), corners[a].Y()).len() > vec2(corners[b].X(), corners[b].Y()).len();
 			});
 
-		auto addAxesDefinedRect = [this, &areaIndex, &rectSize, &wdiv2, &hdiv2](const vec2& origin, const vec2& alongVec, const vec2& tangentVec)->bool {
-			Rect testedRect((origin + alongVec * rectSize.maxSide()).rounded(),
-				(origin + tangentVec * rectSize.minSide()).rounded());
+		auto addAxesDefinedRect = [this, &areaIndex, &rectSize, &wdiv2, &hdiv2](const vec2i& origin, const vec2i& alongVec, const vec2i& tangentVec)->bool {
+			Recti testedRect((origin + alongVec * rectSize.maxSide()), (origin + tangentVec * rectSize.minSide()));
 			auto result = _m_emptyAreas[areaIndex].tryToCut(testedRect);
 
 			if (result.m_succesfull) {
 
-				testedRect.move(vec2(wdiv2, hdiv2));
+				testedRect.move(vec2i(wdiv2, hdiv2));
 				_m_boxes.push_back(testedRect);
 			}
 
@@ -61,14 +69,19 @@ bool Container::tryToAddRect(const Size& rectSize)
 			auto prevIndex = cornerIndex == 0 ? corners.size() - 1 : cornerIndex - 1;
 			auto nextIndex = (cornerIndex + 1) % corners.size();
 
-			auto toCenter = (corners[cornerIndex] * -1.).normilized();
-			auto toPrev = (corners[prevIndex] - corners[cornerIndex]).normilized();
-			auto toNext = (corners[nextIndex] - corners[cornerIndex]).normilized();
-			vec2 along = toNext;
-			vec2 tangent = toPrev;
-			if (vec2::dotProduct(toCenter, toPrev) > vec2::dotProduct(toCenter, toNext)) {
-				along = toPrev;
-				tangent = toNext;
+			auto toCenteri = corners[cornerIndex] * -1;
+			auto toCenterf = vec2(toCenteri.X(), toCenteri.Y()).normilized();
+			auto toPrevi = corners[prevIndex] - corners[cornerIndex];
+			auto toPrevf = vec2(toPrevi.X(), toPrevi.Y()).normilized();
+			toPrevi.setX(static_cast<int>(toPrevf.X())); toPrevi.setY(static_cast<int>(toPrevf.Y()));
+			auto toNexti = corners[nextIndex] - corners[cornerIndex];
+			auto toNextf = vec2(toNexti.X(), toNexti.Y()).normilized();
+			toNexti.setX(static_cast<int>(toNextf.X())); toNexti.setY(static_cast<int>(toNextf.Y()));
+			vec2i along = toNexti;
+			vec2i tangent = toPrevi;
+			if (vec2::dotProduct(toCenterf, toPrevf) > vec2::dotProduct(toCenterf, toNextf)) {
+				along = toPrevi;
+				tangent = toNexti;
 			}
 
 			if (!addAxesDefinedRect(corners[cornerIndex], along, tangent)) {

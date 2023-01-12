@@ -17,9 +17,6 @@
     <ClCompile Include="Rect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Contour.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Container.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -29,24 +26,21 @@
     <ClCompile Include="AAPolygon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Recti.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Rect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="structs.h">
+    <ClInclude Include="size.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="point.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Contour.h">
+    <ClInclude Include="vec2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Container.h">
@@ -56,6 +50,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AAPolygon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Recti.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Edge.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

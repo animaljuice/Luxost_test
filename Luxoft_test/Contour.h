@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "Rect.h"
-#include "point.h"
+#include "vec2.h"
 
 class ContourImpl;
 class Contour

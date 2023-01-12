@@ -3,8 +3,58 @@
 #include <cmath>
 #include <iostream>
 
+class vec2i {
+	int _m_x, _m_y;
+
+public:
+	vec2i(int x, int y) :
+		_m_x(x),
+		_m_y(y)
+	{
+
+	}
+
+	vec2i(double x = 0., double y = 0.) :
+		_m_x(static_cast<int>(std::round(x))),
+		_m_y(static_cast<int>(std::round(y))) {
+
+	}
+
+
+	void setX(int x) { _m_x = x; }
+	void setY(int y) { _m_y = y; }
+
+	int X() const { return _m_x; }
+	int Y() const { return _m_y; }
+
+	void invert() {
+		_m_x *= -1;
+		_m_y *= -1;
+	}
+
+	vec2i operator+(const vec2i& other) const {
+		return { other._m_x + _m_x, other._m_y + _m_y };
+	}
+
+	vec2i operator-(const vec2i& other) const {
+		return { _m_x - other._m_x, _m_y - other._m_y };
+	}
+
+	vec2i operator*(int fac) const {
+		return { _m_x * fac,_m_y * fac };
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const vec2i& p);
+};
+
+inline std::ostream& operator<<(std::ostream& os, const vec2i& p) {
+	os << p.X() << ',' << p.Y();
+	return os;
+}
+
 class vec2 {
 	double _x, _y;
+
 public:
 	vec2(double x = 0., double y = 0.) :
 		_x(x), _y(y)
@@ -12,8 +62,8 @@ public:
 
 	}
 
-	auto X() const { return _x; }
-	auto Y() const { return _y; }
+	double X() const { return _x; }
+	double Y() const { return _y; }
 
 	void setX(double x) { _x = x; }
 	void setY(double y) { _y = y; }
