@@ -14,6 +14,8 @@ public:
 
 	auto width() const { return _w; }
 	auto height() const { return _h; }
+	void setWidth(int w) { _w = w; }
+	void setHeight(int h) { _h = h; }
 	auto maxSide() const { return std::max(_w, _h); }
 	auto minSide() const { return std::min(_w, _h); }
 

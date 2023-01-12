@@ -11,8 +11,10 @@ Input Tests::generateRandomInput(const Size& conteinerSize, int boxCount)
 	auto asd = rand() % int(result.containerSize.maxSide() * 0.5);
 	for (int boxIndex = 0; boxIndex < boxCount; boxIndex++)
 	{
-		result.rectsSizes.insert(Size(double(rand() % int(result.containerSize.maxSide() * 0.5)),
-			double(rand() % int(result.containerSize.maxSide() * 0.5))));
+		auto randW = rand() % int(result.containerSize.maxSide() * 0.5);
+		auto randH = rand() % int(result.containerSize.maxSide() * 0.5);
+
+		auto newIt = result.rectsSizes.insert(Size(randW == 0 ? 1 : randW, randH == 0 ? 1 : randH));
 	}
 
 	return result;

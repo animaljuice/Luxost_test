@@ -21,10 +21,10 @@ struct Edge
 		vec2i result;
 		if (m_orientation == Orientation::HORIZONTAL) {
 			if (m_to > m_from) {
-				result.setY(1);
+				result.setY(-1);
 			}
 			else {
-				result.setY(-1);
+				result.setY(1);
 			}
 		}
 		else {
