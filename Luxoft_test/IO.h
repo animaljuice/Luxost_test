@@ -42,7 +42,6 @@ inline std::istream& operator>>(std::istream& is, Input& in) {
 	std::string inLine;
 	while (!is.eof())
 	{
-		// TODO: perhaps it's worth to check the correctness of the input data, but it's not first priority in this work
 		is >> inLine;
 		auto commaIndex = inLine.find(',');
 		static bool isContainer = true;
@@ -54,7 +53,7 @@ inline std::istream& operator>>(std::istream& is, Input& in) {
 			isContainer = false;
 		}
 		else {
-			if (in.containerSize.minSide() >= currentSize.minSide()) {
+			if (in.containerSize.minSide() >= currentSize.minSide() && currentSize.minSide() > 0) {
 				in.rectsSizes.push_back(currentSize);
 			}
 		}
