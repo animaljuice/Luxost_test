@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 		for (auto boxIt = initData.rectsSizes.begin(); boxIt != initData.rectsSizes.end();) {
 			//fill the container in descending order of rect size
 			if (containers.back().tryToInsertRect(*boxIt)) {
-				// exit the loop after it fails to fit any of the remaining rect
+				// exit the loop after it fails to fit all of the remaining rects
 				finish = false;
 				boxIt = initData.rectsSizes.erase(boxIt);
 			}
