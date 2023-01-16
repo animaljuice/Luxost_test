@@ -11,11 +11,15 @@ class Container {
 
 public:
 	Container(const Size& containerSize);
-	bool tryToAddRect(const Size &rect);
+	bool tryToInsertRect(const Size &rect);
 	Size size() const {
 		return _m_size;
 	}
 
+	/// <summary>
+	/// returns location of rectangle inserted by tryToAddRect
+	/// </summary>
+	/// <returns></returns>
 	std::vector<Recti> boxes() const {
 		return _m_boxes;
 	}

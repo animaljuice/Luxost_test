@@ -10,18 +10,23 @@ Output result;
 
 int main(int argc, char* argv[])
 {
+	// parsing input
 	std::cin >> initData;
+	//std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
-	initData = Tests::generateRandomInput({ 450, 450 }, 100);
+	//initData = Tests::generateRandomInput({ 450, 450 }, 1000);
 
 	bool finish = false;
 	std::vector<Container> containers;
+
 	while (!finish)
 	{
 		finish = true;
 		containers.emplace_back(initData.containerSize);
 		for (auto boxIt = initData.rectsSizes.begin(); boxIt != initData.rectsSizes.end();) {
-			if (containers.back().tryToAddRect(*boxIt)) {
+			//fill the container in descending order of rect size
+			if (containers.back().tryToInsertRect(*boxIt)) {
+				// exit the loop after it fails to fit any of the remaining rect
 				finish = false;
 				boxIt = initData.rectsSizes.erase(boxIt);
 			}
@@ -32,6 +37,7 @@ int main(int argc, char* argv[])
 	}
 	containers.pop_back();
 
+	// fill the program output structure
 	result.containerSize = initData.containerSize;
 	for (size_t containerIndex = 0; containerIndex < containers.size(); containerIndex++) {
 		result.rects.resize(result.rects.size() + 1);
@@ -42,4 +48,7 @@ int main(int argc, char* argv[])
 	}
 
 	std::cout << result;
+
+	/*std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[ms]" << std::endl;*/
 }

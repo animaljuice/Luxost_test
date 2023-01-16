@@ -5,6 +5,7 @@
 Container::Container(const Size& containerSize) :
 	_m_size(containerSize)
 {
+	// center of the container is placed in the origin
 	auto wdiv2 = _m_size.width() >> 1;
 	auto hdiv2 = _m_size.height() >> 1;
 	std::vector<vec2i> initPoints = { {0 - wdiv2,0 - hdiv2},
@@ -14,17 +15,15 @@ Container::Container(const Size& containerSize) :
 	_m_emptyAreas.emplace_back(initPoints);
 }
 
-bool Container::tryToAddRect(const Size& rectSize)
+bool Container::tryToInsertRect(const Size& rectSize)
 {
-	auto wdiv2 = _m_size.width() >> 1;
-	auto hdiv2 = _m_size.height() >> 1;
-
 	for (size_t areaIndex = 0; areaIndex < _m_emptyAreas.size(); areaIndex++)
 	{
 		auto edges = _m_emptyAreas[areaIndex].edges();
 		std::vector<size_t> pushOutIndexes;
 		vec2i curNormal = edges.front().normal();
 		vec2i nextNormal;
+		// Find concave corners. Only in them we will try to place rectangles
 		for (size_t cornerIndex = 0; cornerIndex < edges.size(); cornerIndex++)
 		{
 			auto nextIndex = (cornerIndex + 1) % edges.size();
@@ -41,16 +40,26 @@ bool Container::tryToAddRect(const Size& rectSize)
 		}
 
 		auto corners = _m_emptyAreas[areaIndex].nodes();
+		// sort the corners by distance from the origin
 		std::sort(std::execution::seq, pushOutIndexes.begin(), pushOutIndexes.end(), [&corners](size_t a, size_t b) {
 			return vec2(corners[a].X(), corners[a].Y()).len() > vec2(corners[b].X(), corners[b].Y()).len();
 			});
 
+		auto wdiv2 = _m_size.width() >> 1;
+		auto hdiv2 = _m_size.height() >> 1;
+		/// <summary>
+		/// Trying to insert a new rectangle in the free area.
+		/// </summary>
+		/// <param name="origin">where</param>
+		/// <param name="alongVec">max side direction</param>
+		/// <param name="tangentVec">min side direction</param>
+		/// <returns>success</returns>
 		auto addAxesDefinedRect = [this, &areaIndex, &rectSize, &wdiv2, &hdiv2](const vec2i& origin, const vec2i& alongVec, const vec2i& tangentVec)->bool {
 			Recti testedRect((origin + alongVec * rectSize.maxSide()), (origin + tangentVec * rectSize.minSide()));
 			auto result = _m_emptyAreas[areaIndex].tryToCut(testedRect);
 
 			if (result.m_succesfull) {
-
+				// back to original coordinate system
 				testedRect.move(vec2i(wdiv2, hdiv2));
 				_m_boxes.push_back(testedRect);
 			}
@@ -63,6 +72,7 @@ bool Container::tryToAddRect(const Size& rectSize)
 			return result.m_succesfull;
 		};
 
+		// first try to place the rectangle in the farthest corner
 		bool result = false;
 		for (auto& cornerIndex : pushOutIndexes)
 		{
@@ -87,7 +97,6 @@ bool Container::tryToAddRect(const Size& rectSize)
 
 			if (!addAxesDefinedRect(corners[cornerIndex], along, tangent)) {
 				if (addAxesDefinedRect(corners[cornerIndex], tangent, along)) {
-
 					return true;
 				}
 			}

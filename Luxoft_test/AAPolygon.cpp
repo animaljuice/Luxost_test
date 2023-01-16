@@ -82,8 +82,7 @@ AAPolygon::AAPolygon(const std::vector<vec2i>& nodes) :
 
 std::vector<Edge> AAPolygon::edges()
 {
-	if (_m_cache.empty()) {
-		Edge currentEdge{};
+	if (Edge currentEdge{}; _m_cache.empty()) {
 		for (auto nodeIt = _m_nodes.begin(); nodeIt != _m_nodes.end(); nodeIt++) {
 			auto nextNodeIt = nodeIt;
 			nextNodeIt++;
