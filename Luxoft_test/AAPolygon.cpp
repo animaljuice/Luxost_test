@@ -8,6 +8,45 @@ using Point_2 = Kernel::Point_2;
 using Polygon_2 = CGAL::Polygon_2<Kernel>;
 using Polygon_with_holes_2 = CGAL::Polygon_with_holes_2<Kernel>;
 
+std::vector<Polygon_2> disjoinNotSimplePolygon(const Polygon_2& notSimplePolygon) {
+	std::vector<Polygon_2> result;
+	if (notSimplePolygon.is_simple()) {
+		result.push_back(notSimplePolygon);
+	}
+	else {
+		auto makeNewPolygon = [&notSimplePolygon, &result](Polygon_2::Vertex_iterator start, Polygon_2::Vertex_iterator end) {
+			Polygon_2 newPolygon;
+			for (; true; start++) {
+				if (start == notSimplePolygon.vertices_end()) {
+					start = notSimplePolygon.vertices_begin();
+				}
+
+				newPolygon.push_back(*start);
+
+				if (start == end) {
+					newPolygon.erase(newPolygon.vertices_end() - 1);
+					break;
+				}
+			}
+
+			auto nextLevelPolygons = disjoinNotSimplePolygon(newPolygon);
+			result.insert(result.end(), nextLevelPolygons.begin(), nextLevelPolygons.end());
+		};
+
+		for (auto firstVertexIt = notSimplePolygon.vertices_begin(); firstVertexIt != notSimplePolygon.vertices_end(); firstVertexIt++) {
+			for (auto secondVertexIt = firstVertexIt + 1; secondVertexIt != notSimplePolygon.vertices_end(); secondVertexIt++) {
+				if (*firstVertexIt == *secondVertexIt) {
+					makeNewPolygon(firstVertexIt, secondVertexIt);
+					makeNewPolygon(secondVertexIt, firstVertexIt);
+					return result;
+				}
+			}
+		}
+	}
+
+	return result;
+}
+
 bool intervalsIntersect(int f1, int t1, int f2, int t2) {
 	return f1 < t2&& t1 > f2;
 }
@@ -110,8 +149,16 @@ AAPolygon::CutResult AAPolygon::tryToCut(const Recti& testedRect)
 
 		std::list<Polygon_with_holes_2> intR;
 		CGAL::difference(thisPoly, rectPoly, std::back_inserter(intR));
+
 		bool firstPolygon = true;
 		for (auto& resultPolyWithHole : intR) {
+			if (!resultPolyWithHole.outer_boundary().is_simple()) {
+				auto disjoinedParts = disjoinNotSimplePolygon(resultPolyWithHole.outer_boundary());
+				resultPolyWithHole = Polygon_with_holes_2(disjoinedParts.front());
+				for(auto polygonIt = disjoinedParts.begin() + 1; polygonIt != disjoinedParts.end(); ++polygonIt) {
+					intR.emplace_back(*polygonIt);
+				}
+			}
 			if (firstPolygon) {
 				firstPolygon = false;
 				_m_cache.clear();

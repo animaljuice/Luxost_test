@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 {
 	std::cin >> initData;
 
-	initData = Tests::generateRandomInput({ 400, 400 }, 100);
+	initData = Tests::generateRandomInput({ 450, 450 }, 100);
 
 	bool finish = false;
 	std::vector<Container> containers;
@@ -33,13 +33,13 @@ int main(int argc, char* argv[])
 	containers.pop_back();
 
 	result.containerSize = initData.containerSize;
-	for (size_t containerIndex = 0; containerIndex < containers.size(); containerIndex++){
+	for (size_t containerIndex = 0; containerIndex < containers.size(); containerIndex++) {
 		result.rects.resize(result.rects.size() + 1);
 		auto boxes = containers[containerIndex].boxes();
 		for (auto& resBox : boxes) {
 			result.rects.back().push_back(resBox);
 		}
-	}	
+	}
 
 	std::cout << result;
 }

@@ -8,11 +8,11 @@ Input Tests::generateRandomInput(const Size& conteinerSize, int boxCount)
 	result.containerSize = conteinerSize;
 
 	srand(std::chrono::system_clock::now().time_since_epoch().count());
-	auto asd = rand() % int(result.containerSize.maxSide() * 0.5);
+	auto asd = rand() % int(result.containerSize.maxSide() * 0.1);
 	for (int boxIndex = 0; boxIndex < boxCount; boxIndex++)
 	{
-		auto randW = rand() % int(result.containerSize.maxSide() * 0.5);
-		auto randH = rand() % int(result.containerSize.maxSide() * 0.5);
+		auto randW = rand() % int(result.containerSize.maxSide() * 0.1);
+		auto randH = rand() % int(result.containerSize.maxSide() * 0.1);
 
 		result.rectsSizes.push_back(Size(randW == 0 ? 1 : randW, randH == 0 ? 1 : randH));
 		result.sort();

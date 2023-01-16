@@ -82,6 +82,7 @@ bool Container::tryToAddRect(const Size& rectSize)
 			if (vec2::dotProduct(toCenterf, toPrevf) > vec2::dotProduct(toCenterf, toNextf)) {
 				along = toPrevi;
 				tangent = toNexti;
+
 			}
 
 			if (!addAxesDefinedRect(corners[cornerIndex], along, tangent)) {
