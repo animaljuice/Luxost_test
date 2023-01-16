@@ -7,7 +7,7 @@ Input Tests::generateRandomInput(const Size& conteinerSize, int boxCount)
 	Input result;
 	result.containerSize = conteinerSize;
 
-	srand(std::chrono::system_clock::now().time_since_epoch().count());
+	srand(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
 	for (int boxIndex = 0; boxIndex < boxCount; boxIndex++)
 	{
 		auto randW = rand() % int(result.containerSize.maxSide() * 0.1);
